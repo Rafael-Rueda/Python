@@ -1,0 +1,9 @@
+{% extends 'recipes/bases/recipe-base.html' %}
+
+{% block head_title %}{{title}}{% endblock head_title %}
+
+{% block main_content %} 
+    <div class="main-container-recipe">
+        {% include "recipes/partials/recipe.html" %}
+    </div>
+{% endblock main_content %}
