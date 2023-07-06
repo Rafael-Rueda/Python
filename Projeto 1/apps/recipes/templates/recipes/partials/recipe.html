@@ -1,7 +1,13 @@
 {% for recipe in recipes %}
 <div class="recipe">
     <div class="recipe-image">
-        <a href="{% url 'recipes:recipe' recipe.id %}"><img src="{{recipe.cover.url}}" alt="teste"></a>
+        <a href="{% url 'recipes:recipe' recipe.id %}">
+            {% if recipe.cover %}
+                <img src="{{recipe.cover.url}}" alt="teste">
+            {% else %}
+                <img src="https://placehold.co/1280x640/black/png" alt="teste">
+            {% endif %}
+        </a>
     </div>
     <div class="recipe-title">
         <h3>{{recipe.title}}</h3>
@@ -66,11 +72,13 @@
     {% endif %}
     {% if not is_detail_page %}
         <div class="recipe-footer">
-            <a href="{% url 'recipes:recipe' recipe.id %}"><div><i class="fa-sharp fa-solid fa-eye"></i> Ver mais...</div></a>
+            <a href="{% url 'recipes:recipe' recipe.id %}"><p><i class="fa-sharp fa-solid fa-eye"></i> Ver mais...</p></a>
         </div>
     {% endif %}
 </div>
 
+{% comment %} 
 {% empty %}
-<p> No recipes found here )= </p> 
+<h2 class="text-404"> No recipes found here )= </h2>  
+{% endcomment %}
 {% endfor %}

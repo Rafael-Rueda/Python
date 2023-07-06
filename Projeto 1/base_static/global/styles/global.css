@@ -55,7 +55,14 @@ body {
 .content-wrapper {
     display: grid;
     height: 100vh;
-    grid-template-rows: auto auto 1fr auto;
+    grid-template-rows: auto auto auto 1fr auto;
+}
+
+.text-404 {
+    text-align: center;
+    font-size: 24px;
+    padding: 8px;
+    justify-self: center;
 }
 
 h1,h2,h3,h4,h5,h6,p {

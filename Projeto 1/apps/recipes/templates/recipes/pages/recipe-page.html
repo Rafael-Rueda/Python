@@ -2,6 +2,10 @@
 
 {% block head_title %}{{title}}{% endblock head_title %}
 
+{% block messages %}
+    {% include "global/partials/flash-messages.html" %}
+{% endblock messages %}
+
 {% block main_content %} 
     <div class="main-container-recipe">
         {% include "recipes/partials/recipe.html" %}

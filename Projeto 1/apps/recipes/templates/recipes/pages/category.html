@@ -3,7 +3,7 @@
 {% block head_title %}{{title}}{% endblock head_title %}
 
 {% block search_bar %}
-    {% include "global/partials/search.html" %}
+    {% include "recipes/partials/search.html" %}
 {% endblock search_bar %}
 
 {% block main_content %}
@@ -11,3 +11,7 @@
         {% include "recipes/partials/recipe.html" %}
     </div>
 {% endblock main_content %}
+
+{% block pagination%} 
+    {% include "recipes/partials/pagination.html" %}
+{% endblock pagination %}
