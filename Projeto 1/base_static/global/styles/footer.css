@@ -1,9 +1,0 @@
-footer {
-    color: var(--color-white);
-    background-color: var(--color-primary-dark);
-    padding: 2rem;
-}
-
-footer > p {
-    text-align: right;
-}
