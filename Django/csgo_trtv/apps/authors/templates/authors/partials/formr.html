@@ -1,0 +1,15 @@
+<div class="form">
+    <form action="{% url 'authors:register' %}" method="POST">
+        {% csrf_token %}
+        {% for field in form %}    
+            <div class="field">
+                <label for="{{field.id_for_label}}">{{field.label}}</label>
+                {{field}}
+                {{field.errors}}
+            </div>
+        {% endfor %}
+    <div class="submit">
+        <button type="submit">Continue</button>
+    </div>
+    </form>
+</div>

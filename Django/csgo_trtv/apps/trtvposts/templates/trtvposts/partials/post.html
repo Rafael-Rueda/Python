@@ -1,0 +1,26 @@
+<div class="post">
+    <div class="post-title">
+        <h1>{{post.title}}</h1>
+    </div>
+    <div class="post-video">
+        <iframe width="1280" height="720" src="{{post.video}}" title="{{post.title}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <div class="post-tags">
+        <div class="tags-category">
+            <a href="{% url 'plays:bycategory' post.category %}">
+            {{post.category}}
+            </a>
+        </div>
+        <div class="tags-map">
+            <a href="{% url 'plays:bymap' post.map %}">
+            {{post.map}}
+            </a>
+        </div>
+    </div>
+    <div class="post-description">
+        <p class="description">
+            {{post.description}}
+        </p>
+    </div>
+    {% include 'trtvposts/partials/comments.html' %}
+</div>

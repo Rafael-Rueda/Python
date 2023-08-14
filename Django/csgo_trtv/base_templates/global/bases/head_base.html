@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %}</title>
+
+    <link rel="stylesheet" href="{% static 'plays/styles/banner.css' %}">
+    <link rel="stylesheet" href="{% static 'trtvposts/styles/post.css' %}">
+    <link rel="stylesheet" href="{% static 'trtvposts/styles/comments.css' %}">
+    <link rel="stylesheet" href="{% static 'authors/styles/form.css' %}">
+
+    {% comment %} Global styles {% endcomment %}
+    <link rel="stylesheet" href="{% static 'global/styles/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'global/styles/global.css' %}">
+    <link rel="stylesheet" href="{% static 'global/styles/posts.css' %}">
+    
+    <script src="https://kit.fontawesome.com/b559fbf78d.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    {% block body %}{% endblock body %}
+</body>
+</html>

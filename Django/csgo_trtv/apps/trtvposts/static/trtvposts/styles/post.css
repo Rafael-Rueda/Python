@@ -1,0 +1,38 @@
+.post {
+
+}
+
+.post-title {
+    background-color: black;
+    color: white;
+    font-size: 32px;
+    padding: 16px;
+    text-align: center;
+}
+
+.post-video {
+
+}
+
+.post-video iframe {
+    display: block;
+    width: 100%;
+    margin: auto;
+}
+
+.post-tags {
+    margin: 16px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 16px;
+}
+
+.post-tags a {
+    color: white;
+    text-decoration: none;
+}
+
+.post-description {
+    font-size: 24px;
+    margin: 16px;
+}

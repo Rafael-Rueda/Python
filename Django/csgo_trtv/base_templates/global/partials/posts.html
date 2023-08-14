@@ -1,0 +1,54 @@
+{% load static %}
+<div class="postshome">
+    {% for post in posts %}
+
+    <div class="posthome">
+        <div class="posthome-img">
+            <img src="{{post.cover.url}}" alt="">
+        </div>
+        <div class="posthome-content">
+            <div class="posthome-division">
+                <a class="posthome-title" href="{% url 'trtvposts:play' post.slug %}">
+                    <h1 class="posthome-title">{{post.title}}</h1>
+                </a>
+            </div>
+
+            
+            
+            <div class="posthome-tags">
+                <div class="tags-category">
+                    <a href="{% url 'plays:bycategory' post.category %}">
+                    {{post.category}}
+                    </a>
+                </div>
+                <div class="tags-map">
+                    <a href="{% url 'plays:bymap' post.map %}">
+                    {{post.map}}
+                    </a>
+                </div>
+                <div class="tags-language">
+                    {% if post.language == 'pt' %}
+                    <div class="posthome-division">
+                        <img src="{% static 'global/images/Flag_of_Brazil.svg' %}" alt="Brazil">
+                    </div>
+                    {% elif post.language == 'en'%}
+                    <div class="posthome-division">
+                        <img src="{% static 'global/images/Flag_of_United_States.svg' %}" alt="USA">
+                    </div>
+                    {% elif post.language == 'ru'%}
+                    <div class="posthome-division">
+                        <img src="{% static 'global/images/Flag_of_Russia.svg' %}" alt="Russia">
+                    </div>
+                    {% elif post.language == 'sp'%}
+                    <div class="posthome-division">
+                        <img src="{% static 'global/images/Flag_of_Spain.svg' %}" alt="Spain">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <p class="posthome-description">{{post.description}}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+

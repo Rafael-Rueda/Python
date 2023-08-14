@@ -1,0 +1,50 @@
+{% load static %}
+
+<nav id="navbarmain">
+    <div class="navbar-container">
+        <div class="img">
+            <img src="{% static 'global/images/csgotrtv_logo.png' %}" alt="">
+        </div>
+        <div class="navbarul">
+            <ul>
+                <li><a href="{% url 'plays:home' %}">Home</a></li>
+                <li><a href="{% url 'plays:highlights' %}">Highlights</a></li>
+                <li><a href="{% url 'plays:strategies' %}">Strategies</a></li>
+                <li><a href="{% url 'plays:academy' %}">Academy</a></li>
+                <li><a href="">About</a></li>
+            </ul>
+        </div>
+        <div class="menu" id="navbar-menu">
+            <i class="fa-solid fa-bars fa-2xl"></i>
+        </div>
+        <div class="navbarcollapsedul">
+            <ul>
+                <li><a href="{% url 'plays:home' %}">Home</a></li>
+                <li><a href="{% url 'plays:highlights' %}">Highlights</a></li>
+                <li><a href="{% url 'plays:strategies' %}">Strategies</a></li>
+                <li><a href="{% url 'plays:academy' %}">Academy</a></li>
+                <li><a href="">About</a></li>
+            </ul>
+        </div>
+    </div> 
+</nav>
+
+<script>
+    const navbarmenu = document.getElementById('navbar-menu')
+    let travanavbarmenu = true
+
+    function abrirmenu() {
+        navbarmain = document.getElementById('navbarmain')
+        if (travanavbarmenu == true) {
+            navbarmain.classList.remove('collapsed')
+            navbarmain.classList.add('extended')
+            travanavbarmenu = false
+        } else {
+            navbarmain.classList.remove('extended')
+            navbarmain.classList.add('collapsed')
+            travanavbarmenu = true
+        }
+    }
+
+    navbarmenu.addEventListener('click', abrirmenu)
+</script>

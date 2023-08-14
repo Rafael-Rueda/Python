@@ -1,0 +1,38 @@
+.form {
+    display: flex;
+    justify-content: center;
+    margin: 32px;
+}
+
+.form form {
+    width: 100%;
+    display: grid;
+    justify-content: center;
+    gap: 32px;
+}
+
+.field {
+}
+
+.field label {
+    display: block;
+
+}
+
+.field input {
+    width: 35vw;
+    height: 30px;
+}
+
+.submit button {
+    background-color: black;
+    color: white;
+    padding: 8px 16px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.submit {
+    justify-self: end;
+}

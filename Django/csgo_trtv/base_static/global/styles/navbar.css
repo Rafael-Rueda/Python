@@ -1,0 +1,106 @@
+nav {
+    background-color: black;
+    color: white;
+    width: 100%;
+    height: 80px;
+    transition: all .5s;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.navbar-container {
+    display: grid;
+    justify-content: center;
+    gap: 0px 64px;
+    grid-template-columns: 1fr 1fr;
+    height: auto;
+    width: 0px;
+}
+
+.collapsed {
+    height: 80px;
+}
+
+.extended {
+    height: 300px;
+}
+
+nav .img {
+    justify-self: end;
+    height: 80px;
+}
+
+nav ul {
+    display: flex;
+    justify-content: center;
+    gap: 64px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.navbarul {
+    display: flex;
+    justify-self: start;
+    justify-content: center;
+    align-items: center;
+}
+
+nav ul a {
+    text-decoration: none;
+    color: white;
+}
+nav ul a:visited {
+    text-decoration: none;
+    color: white;
+}
+
+div.menu {
+    display: none;
+    height: 80px;
+    grid-column: 2;
+    grid-row: 1;
+    
+    align-items: center;
+    justify-content: end;
+}
+
+.menu > * {
+    cursor: pointer;
+}
+
+.navbarcollapsedul {
+    grid-column: span 2;
+    grid-row: 2;
+    z-index: 1;
+
+    display: flex;
+    justify-content: left;
+    gap: 64px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.navbarcollapsedul ul {
+    display: grid;
+    gap: 0px;
+
+}
+
+@media screen and (max-width: 900px) {
+    .navbarul {
+        display: none;
+    }
+
+    nav {
+        justify-content: space-around;
+    }
+
+    div.menu {
+        display: flex;
+    }
+
+    .navbar-container {
+        width: auto;
+    }
+}

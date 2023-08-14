@@ -1,0 +1,7 @@
+{% extends 'global/bases/head_base.html' %}
+
+{% block title %}CSGO TRTV | {{post.title}}{% endblock title %}
+{% block body %}
+    {% include 'global/partials/navbar.html' %}
+    {% include 'trtvposts/partials/post.html' %}
+{% endblock body %}

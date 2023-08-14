@@ -1,0 +1,73 @@
+.comments h1{
+    width: 95%;
+    margin: auto;
+    padding: 16px;
+}
+
+.comment-form {
+    display: grid;
+    justify-content: center;
+    width: 100%;
+    grid-template-columns: 90% auto;
+}
+
+.comment-form form {
+    display: grid;
+    width: 100%;
+}
+
+.create-comment {
+    display: grid;
+    width: 100%;
+}
+
+.create-comment textarea {
+    display: block;
+    width: 100%;
+}
+
+.create-comment button {
+    width: 90px;
+    justify-self: end;
+    background-color: black;
+    color: white;
+    padding: 8px;
+    cursor: pointer;
+}
+
+
+.comment form button {
+    background-color: #ff5555;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.comment {
+    padding: 16px;
+    width: 90%;
+    margin: auto;
+}
+
+.comment-text {
+    padding: 8px;
+}
+
+.commentline3 {
+    display: flex;
+    justify-content: space-between;
+}
+
+.like {
+    cursor: pointer;
+}
+
+.like a {
+    color: black;
+}
+
+.like a:visited {
+    color: black;
+}

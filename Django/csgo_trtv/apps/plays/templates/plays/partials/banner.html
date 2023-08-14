@@ -1,0 +1,45 @@
+{% load static %}
+<div class="banner">
+    <div class="bannercontainer1">
+        <div class="banner-title">
+            <img src="{% static 'global/images/csgotrtv_logo.png' %}" alt="csgotrtv logo">
+            <h1>Learn for free <br/>how to play<br/><span class="font-72 color-orange">CSGO</span><br/>with the best<br/>strategies !</h1>
+        </div>
+    </div>
+
+    <video id="meuVideo" autoplay loop muted>
+        <!-- Source para telas grandes -->
+        <source id="sourceGrande" src="{% static 'global/videos/Banner_video600.mp4' %}" type="video/mp4" />
+        <!-- Source para telas pequenas -->
+        <source id="sourcePequeno" src="{% static 'global/videos/Banner_video1080.mp4' %}" type="video/mp4" />
+        Your browser does not support video elements.
+    </video>
+</div>
+
+<script>
+    function atualizarSourceDoVideo() {
+        const video = document.getElementById("meuVideo");
+        const sourceGrande = document.getElementById("sourceGrande");
+        const sourcePequeno = document.getElementById("sourcePequeno");
+
+        // Obter a largura da página
+        const larguraPagina = window.innerWidth;
+
+        // Definir a source do vídeo com base no tamanho da página
+        if (larguraPagina >= 1400) {
+            video.src = sourceGrande.src;
+            navbarmain = document.getElementById('navbarmain')
+            navbarmain.classList.remove('extended')
+            navbarmain.classList.add('collapsed')
+            travanavbarmenu = true
+        } else {
+            video.src = sourcePequeno.src;
+        }
+    }
+
+    // Chamar a função quando a página carregar
+    window.onload = atualizarSourceDoVideo;
+
+    // Chamar a função quando o tamanho da página mudar (por exemplo, quando a janela do navegador é redimensionada)
+    window.onresize = atualizarSourceDoVideo;
+</script>
