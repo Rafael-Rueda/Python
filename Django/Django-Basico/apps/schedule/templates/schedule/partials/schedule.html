@@ -1,0 +1,26 @@
+{% if schedules %}
+    <table class="schedules">
+        <thead>
+            <tr class="schedule-title">
+                <th class="category-id">ID</th>
+                <th class="category-first-name">First Name</th>
+                <th class="category-last-name">Last Name</th>
+                <th class="category-phone">Phone</th>
+                <th class="category-email">Email</th>
+                <th class="schedule-category">Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for schedule in schedules %}
+                <tr class="schedule">
+                    <th class="category-id"><a href="{% url "schedule:edit_schedule" schedule.id %}">{{schedule.id}}</a></th>
+                    <th class="category-first-name">{{schedule.first_name}}</th>
+                    <th class="category-last-name">{{schedule.last_name}}</th>
+                    <th class="category-phone">{{schedule.phone}}</th>
+                    <th class="category-email">{{schedule.email}}</th>
+                    <th class="schedule-category">{{schedule.category}}</th>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

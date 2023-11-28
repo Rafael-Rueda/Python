@@ -1,0 +1,20 @@
+.schedule {
+    background-color: white;
+}
+
+
+.schedule-title {
+    background-color: cornflowerblue;
+    color: white;
+}
+
+.schedules {
+    width: 100%;
+    font-size: 24px;
+}
+
+@media screen and (max-width: 600px) {
+    .category-email {
+        display: none;
+    }
+}

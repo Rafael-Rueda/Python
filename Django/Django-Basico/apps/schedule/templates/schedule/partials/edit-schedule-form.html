@@ -1,0 +1,12 @@
+<form method="POST" action="{% url "schedule:edit_schedule" schedule_id %}">
+    <h2>Edit a Schedule</h2>
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="field">
+            <label for="{{field.id_for_label}}">{{field.label}}</label>
+            {{field}}
+            {{field.errors}}
+        </div>
+    {% endfor %}
+    <button type="submit">Save</button>
+</form>
