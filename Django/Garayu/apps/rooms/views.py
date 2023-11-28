@@ -1,23 +1,25 @@
-from faker import Faker
-from django.contrib import messages
-
-from django.shortcuts import render, redirect
-
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate
-
 import random
 import string
-from django.utils.text import slugify
+import time
 
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from apps.start.forms import NicknameForm
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
+from django.utils.text import slugify
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from faker import Faker
+from spotipy import Spotify
+from spotipy.oauth2 import SpotifyOAuth
+
 from apps.rooms.forms import CreateRoomForm, JoinPasswordRoomForm
 from apps.rooms.models import Room, UserInRoom
+from apps.start.forms import NicknameForm
 
-from django.http import JsonResponse, HttpResponse
-from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
 
 def rooms_checkin(request):
     if request.method == 'POST':
@@ -56,7 +58,7 @@ def rooms_checkin(request):
             }
 
             request.session.save()
-        return redirect('rooms:rooms')
+        return redirect('start:spotify_auth')
     else: 
         return redirect('start:home')
 
@@ -68,6 +70,31 @@ def delete_user(request):
 
 @login_required(login_url='start:home')
 def rooms(request):
+
+    if 'code' in request.GET:
+        code = request.GET['code']
+
+        sp_oauth = SpotifyOAuth(
+            settings.SPOTIFY_CLIENT_ID,
+            settings.SPOTIFY_CLIENT_SECRET,
+            settings.SPOTIFY_REDIRECT_URI,
+            scope="user-library-read user-top-read user-read-playback-state user-read-recently-played",
+        )
+
+        token_info = sp_oauth.get_access_token(code)
+
+        request.session['token_info'] = token_info
+
+        # if token_info.get('expires_at', 0) < time.time():
+        #     sp_oauth = SpotifyOAuth(
+        #         settings.SPOTIFY_CLIENT_ID,
+        #         settings.SPOTIFY_CLIENT_SECRET,
+        #         settings.SPOTIFY_REDIRECT_URI,
+        #         scope="user-library-read user-top-read user-read-playback-state user-read-recently-played",
+        #     )
+        #     token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+        #     request.session['token_info'] = token_info
+
     rooms = Room.objects.all().filter(available=True)
     createroomform = CreateRoomForm()
 

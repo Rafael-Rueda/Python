@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+
 from django.contrib import messages
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
@@ -159,3 +160,8 @@ MESSAGE_TAGS = {
     messages.WARNING: 'message-warning',
     messages.INFO: 'message-info',
 }
+
+SPOTIFY_CLIENT_ID = str(os.environ.get('SPOTIFY_CLIENT_ID'))
+SPOTIFY_CLIENT_SECRET = str(os.environ.get('SPOTIFY_CLIENT_SECRET'))
+SPOTIFY_REDIRECT_URI = 'http://localhost:8000/rooms/'
+SPOTIFY_REDIRECT_URI2 = 'http://localhost:8000/game/spotify-callback/'

@@ -18,7 +18,9 @@
                 <div class="configs">
                     
                 </div>
-                <button id="start-game">Start Game</button>
+                {% comment %} <form method="GET" action="{% url "game:game_running" room.slug %}"> {% endcomment %}
+                <button type="submit" id="start-game">Start Game</button>
+                {% comment %} </form> {% endcomment %}
             {% else %}
                 <p>Waiting for the host to start the game...</p>
             {% endif %}
@@ -69,7 +71,21 @@
             // Start the game
 
             function game_started() {
-                console.log('Comecou !');
+                $.ajax({
+                    url: '{% url "game:game_running" room.slug %}',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log('deu certo')
+                        console.log(data)
+                    },
+                    error: function () {
+                        console.error('Failed to get a response from game_running.');
+                    },
+                });
+
+                $('.players').remove()
+                $('.controls').remove()
             }
 
             function checkRoomAvailability() {
@@ -79,7 +95,6 @@
                     dataType: 'json',
                     success: function (data) {
                         if (data.started) {
-                            console.log('Jogo iniciou');
                             clearInterval(checkInterval);
                             clearInterval(getInterval);
                             game_started();
