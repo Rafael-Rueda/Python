@@ -37,6 +37,8 @@
     min-height: 600px;
 
     grid-template-columns: 25% 1fr;
+
+    overflow: hidden;
 }
 
 .rooms {
@@ -351,6 +353,8 @@
     display: grid;
     justify-content: center;
     align-content: center;
+
+    z-index: 10;
 }
 
 .configs {
@@ -359,6 +363,10 @@
     display: flex;
     margin-left: 64px;
     margin-top: 64px;
+}
+
+.controls {
+    grid-column: 2;
 }
 
 .controls p {

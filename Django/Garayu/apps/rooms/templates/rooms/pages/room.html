@@ -18,7 +18,7 @@
                 <div class="configs">
                     
                 </div>
-                {% comment %} <form method="GET" action="{% url "game:game_running" room.slug %}"> {% endcomment %}
+                {% comment %} <form method="GET" action="{% url "game:game_sort_music" room.slug %}"> {% endcomment %}
                 <button type="submit" id="start-game">Start Game</button>
                 {% comment %} </form> {% endcomment %}
             {% else %}
@@ -68,25 +68,188 @@
             // Fetch users every second
             getInterval = setInterval(getUsersInRoom, 1000);
 
-            // Start the game
+            // Start the game <--------------------------------------------------------------------------------------------
 
-            function game_started() {
+            function game_started(is_host) {
                 $.ajax({
                     url: '{% url "game:game_running" room.slug %}',
                     type: 'GET',
                     dataType: 'json',
                     success: function (data) {
-                        console.log('deu certo')
-                        console.log(data)
+                        createMusicElement(data);
                     },
                     error: function () {
-                        console.error('Failed to get a response from game_running.');
+                        if (is_host) {
+                            sortMusic();
+                        } else {
+                            loadMusic();
+                        }
                     },
                 });
 
                 $('.players').remove()
                 $('.controls').remove()
+
+                var controlsDiv = $('<div>', {
+                    'class': 'controls'
+                });
+        
+                var leaveRoomForm = $('<form>', {
+                    'class': 'leave-room',
+                    'method': 'POST',
+                    'action': '{% url "rooms:rooms_leave" %}'
+                });
+        
+                leaveRoomForm.append($('<input>', {
+                    'type': 'hidden',
+                    'name': 'csrfmiddlewaretoken',
+                    'value': '{{ csrf_token }}'
+                }));
+        
+                var leaveButton = $('<button>', {
+                    'type': 'submit',
+                    'text': 'Leave'
+                });
+        
+                leaveRoomForm.append(leaveButton);
+        
+                controlsDiv.append(leaveRoomForm);
+        
+                $('.room-container').append(controlsDiv);
             }
+
+            end_game = 0;
+
+            function sortMusic() {
+                $.ajax({
+                    url: '{% url "game:game_sort_music" room.slug %}',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+                        createMusicElement(data);
+                    },
+                    error: function () {
+                        console.error('Failed to sort musics.');
+                        end_game += 1;
+                    },
+                });
+            }
+            function loadMusic() {
+                $.ajax({
+                    url: '{% url "game:game_running" room.slug %}',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        createMusicElement(data);
+                    },
+                    error: function () {
+                        loadMusic();
+                    },
+                });
+            }
+            // Pause when the user leave / unfocus the page.
+            /* var isPageVisible = true;
+
+            document.addEventListener("visibilitychange", function () {
+                isPageVisible = !document.hidden;
+        
+                if (!isPageVisible) {
+                    $('.music-player')[0].pause();
+                } else {
+                    $('.music-player')[0].play();
+                }
+            }); */
+
+            function createMusicElement(data) {
+                $('.music-container').empty()
+                if ($('.music-container').length) {
+                    $('.music-container').remove();
+                }
+                var $musicContainer = $('<div>').addClass('music-container');
+                var $musicCover = $('<img>').addClass('music-cover').attr('src', data.music_cover).attr('alt', 'Music Cover');
+                var $musicPlayer = $('<audio>').addClass('music-player').attr('src', data.music_src).attr('autoplay', true).attr('controls', false);
+                $musicPlayer[0].controlsList = "nodownload noplaybackrate";
+                $musicPlayer[0].volume = 0.1;
+                var $musicName = $('<p>').addClass('music-name').text(data.music_name);
+                var $musicArtist = $('<p>').addClass('music-artist').text(data.music_artist);
+        
+                // Circle effect
+
+                var frameContainer = $('<div class="frame-container"></div>');
+                var circlesElement = $('<div class="circles"></div>');
+                for (var i = 0; i < 12; i++) {
+                    circlesElement.append('<div class="circle"></div>');
+                }
+                frameContainer.append(circlesElement);
+                $musicContainer.append(frameContainer);
+                
+                $musicPlayer[0].play();
+
+                $musicPlayer.on('ended', function () {
+                    // console.log('Audio has finished playing');
+                    endMusic();
+                });
+
+                $musicContainer.append($musicCover, $musicPlayer, $musicName, $musicArtist);
+                $('.room-container').append($musicContainer)
+            }
+
+            function endMusic() {
+                $.ajax({
+                    url: '{% url "game:game_end_music" room.slug %}',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+                        $('.music-container').animate({
+                            top: '-100%',
+                            opacity: 0
+                        }, 1000, function () {
+                            $(this).remove();
+                        });
+                    },
+                    error: function () {
+                        
+                    },
+                });
+            }
+
+            function checkMusicEnded() {
+                try {
+                    $musicPlayer = $('.music-player');
+                    $musicPlayer[0].play();
+
+                    if ($('.message').length && !$musicPlayer[0].paused) {
+                        $('.message').remove();
+                    }
+                } catch (error) {                
+                    $message = $('<div>').addClass('message').addClass('message-warning').text('Please, interact with the page to listen the music.');
+                    
+                    $('body').append($message);
+                }
+
+                $.ajax({
+                    url: '{% url "game:game_ended_music" room.slug %}',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.is_host) {
+                            sortMusic();
+                        } else if (data.started) {
+                            loadMusic();
+                        }
+                    },
+                    error: function () {
+                    },
+                });
+
+                if (end_game >= 5) {
+                    clearInterval(checkMusicInterval);
+                    game_ended();
+                }
+            }
+            
+            // Check every second if the music ended
+            checkMusicInterval = setInterval(checkMusicEnded, 1000);
 
             function checkRoomAvailability() {
                 $.ajax({
@@ -97,7 +260,7 @@
                         if (data.started) {
                             clearInterval(checkInterval);
                             clearInterval(getInterval);
-                            game_started();
+                            game_started(data.is_host);
                         }
                     },
                     error: function () {
@@ -108,12 +271,19 @@
             
             // Check every second if the room started
             checkInterval = setInterval(checkRoomAvailability, 1000);
+
+            // End the game <--------------------------------------------------------------------------------------------
+
+            function game_ended() {
+                $('.music-container').remove();
+            }
         });
     </script>
     <script>
         $(document).ready(function () { 
 
             $('#start-game').on('click', function () {
+                
                 $.ajax({
                     url: '{% url "game:game_start" room.slug %}',
                     type: 'POST',
@@ -125,6 +295,7 @@
                         console.error('Failed to obtain a response.');
                     },
                 });
+                
             });
 
         });

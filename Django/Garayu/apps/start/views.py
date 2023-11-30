@@ -21,7 +21,6 @@ def home(request):
 
 def spotify_auth(request):
     if 'token_info' in request.session:
-        print('tinha')
         del request.session['token_info']
 
     sp_oauth = SpotifyOAuth(

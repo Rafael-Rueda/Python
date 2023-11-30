@@ -85,15 +85,15 @@ def rooms(request):
 
         request.session['token_info'] = token_info
 
-        # if token_info.get('expires_at', 0) < time.time():
-        #     sp_oauth = SpotifyOAuth(
-        #         settings.SPOTIFY_CLIENT_ID,
-        #         settings.SPOTIFY_CLIENT_SECRET,
-        #         settings.SPOTIFY_REDIRECT_URI,
-        #         scope="user-library-read user-top-read user-read-playback-state user-read-recently-played",
-        #     )
-        #     token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
-        #     request.session['token_info'] = token_info
+        if token_info.get('expires_at', 0) < time.time():
+            sp_oauth = SpotifyOAuth(
+                settings.SPOTIFY_CLIENT_ID,
+                settings.SPOTIFY_CLIENT_SECRET,
+                settings.SPOTIFY_REDIRECT_URI,
+                scope="user-library-read user-top-read user-read-playback-state user-read-recently-played",
+            )
+            token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
+            request.session['token_info'] = token_info
 
     rooms = Room.objects.all().filter(available=True)
     createroomform = CreateRoomForm()
@@ -113,10 +113,10 @@ def rooms_joining(request, slug):
             allusersinroom = UserInRoom.objects.filter(room=room)
 
             if (len(allusersinroom) >= 6) and not user_already_in_room:
-                messages.error(request, 'Sala cheia ! Por favor, escolha outra sala.')
+                messages.error(request, 'Full room ! Please, choose another room.')
                 return redirect('rooms:rooms')
             if not room.available and not user_already_in_room:
-                messages.error(request, 'Partida em andamento! Por favor, escolha outra sala.')
+                messages.error(request, 'Match currently running ! Please, choose another room.')
                 return redirect('rooms:rooms')
             
             password_room_form = JoinPasswordRoomForm()

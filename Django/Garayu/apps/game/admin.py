@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from apps.game.models import PlaylistControl, QueueMusic
+
+admin.site.register(PlaylistControl)
+admin.site.register(QueueMusic)
