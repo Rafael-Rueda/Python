@@ -26,13 +26,19 @@ def game_checking_available(request, slug):
             result_user = queue.queue.user.first_name
         else:
             is_voting = False
+            result_user = None
 
         if vote_timer:
             results = vote_timer.results
         else:
             results = False
         
-        return JsonResponse({'started': True, 'is_host': userinroom.host, 'is_voting': is_voting, 'results': results, 'result_user': result_user})
+        if PlaylistControl.objects.filter(blacklisted=False, room=room).exists():
+            game_ended = False
+        else:
+            game_ended = True
+        
+        return JsonResponse({'started': True, 'is_host': userinroom.host, 'is_voting': is_voting, 'results': results, 'result_user': result_user, 'game_ended': game_ended})
     else:
         return JsonResponse({'started': False})
 
@@ -109,7 +115,7 @@ def game_sort_music(request, slug):
     if request.method == 'POST':
         room = Room.objects.filter(slug=slug).first()
 
-        has_track = PlaylistControl.objects.filter(blacklisted=False).first()
+        has_track = PlaylistControl.objects.filter(room=room, blacklisted=False).first()
 
         # Cant use session because it is individual
         # request.session['queue_music'] = {'track': random_track.playlist_preview_url, 'cover': random_track.playlist_cover, 'name': random_track.playlist_name}
@@ -130,8 +136,9 @@ def game_sort_music(request, slug):
                 queue_music.ended = False
                 queue_music.save()
 
-                track.blacklisted = True
-                track.save()
+                if track:
+                    track.blacklisted = True
+                    track.save()
 
         return redirect('game:game_running', slug=slug)
     else:
@@ -155,12 +162,12 @@ def vote_timer(request, slug):
                 timer = VoteTimer.objects.create(room=room)
 
             if timer.seconds > 0:
-                if (UserInRoom.objects.filter(host=True).first().user == request.user):
+                if (UserInRoom.objects.filter(room=room, host=True).first().user == request.user):
                     timer.seconds = timer.seconds - 1
                     timer.save()
                 return JsonResponse({'timing': True, 'seconds': timer.seconds})
             else:
-                if (UserInRoom.objects.filter(host=True).first().user == request.user and request.POST.get('reset') == 'true'):
+                if (UserInRoom.objects.filter(room=room, host=True).first().user == request.user and request.POST.get('reset') == 'true'):
                     timer.seconds = 15
                     timer.results = True
                     timer.save()
@@ -217,3 +224,14 @@ def game_end_music(request, slug):
         return redirect('game:game_checking', slug=slug)
     else:
         return redirect('rooms:rooms_joining', slug=slug)
+    
+def get_all_users_in_room(request, slug):
+    room = Room.objects.filter(slug=slug).first()
+
+    if room:
+        usersinroom = UserInRoom.objects.filter(room=room)
+        all_users_in_room = [user.user.first_name for user in usersinroom]
+        print(all_users_in_room)
+        return JsonResponse({'all_users_in_room': all_users_in_room})
+    else:
+        return JsonResponse({})
