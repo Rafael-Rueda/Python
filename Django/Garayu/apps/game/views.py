@@ -9,7 +9,7 @@ from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from spotipy import Spotify, SpotifyOAuth
 
-from apps.game.models import PlaylistControl, QueueMusic
+from apps.game.models import PlaylistControl, QueueMusic, VoteTimer
 from apps.rooms.models import Room, UserInRoom
 
 
@@ -19,7 +19,20 @@ def game_checking_available(request, slug):
     room = Room.objects.filter(slug=slug).first()
     if not room.available:
         userinroom = UserInRoom.objects.filter(user=request.user).first()
-        return JsonResponse({'started': True, 'is_host': userinroom.host})
+        queue = QueueMusic.objects.filter(room=room).first()
+        vote_timer = VoteTimer.objects.filter(room=room).first()
+        if queue:
+            is_voting = queue.voting
+            result_user = queue.queue.user.first_name
+        else:
+            is_voting = False
+
+        if vote_timer:
+            results = vote_timer.results
+        else:
+            results = False
+        
+        return JsonResponse({'started': True, 'is_host': userinroom.host, 'is_voting': is_voting, 'results': results, 'result_user': result_user})
     else:
         return JsonResponse({'started': False})
 
@@ -80,7 +93,7 @@ def game_running(request, slug):
     queue = QueueMusic.objects.filter(room=room).first()
 
     # return JsonResponse({'playlists': playlists, 'players': players_data, 'current_username': current_username})
-    if queue and queue.queue:
+    if queue and queue.queue and not queue.ended: # If appear some errors, try removing "and not queue.ended" statement
         music_src = queue.queue.playlist_preview_url
         music_cover = queue.queue.playlist_cover
         music_name = queue.queue.playlist_name
@@ -123,6 +136,55 @@ def game_sort_music(request, slug):
         return redirect('game:game_running', slug=slug)
     else:
         return redirect('rooms:rooms_joining', slug=slug)
+    
+# Vote time
+
+@csrf_exempt
+@login_required(login_url='start:home')
+def vote_timer(request, slug):
+    if request.method == 'POST':
+        room = Room.objects.filter(slug=slug).first()
+        if room:
+            queue = QueueMusic.objects.filter(room=room).first()
+            queue.voting = True
+            queue.save()
+
+            if (VoteTimer.objects.filter(room=room).exists()):
+                timer = VoteTimer.objects.filter(room=room).first()
+            else:
+                timer = VoteTimer.objects.create(room=room)
+
+            if timer.seconds > 0:
+                if (UserInRoom.objects.filter(host=True).first().user == request.user):
+                    timer.seconds = timer.seconds - 1
+                    timer.save()
+                return JsonResponse({'timing': True, 'seconds': timer.seconds})
+            else:
+                if (UserInRoom.objects.filter(host=True).first().user == request.user and request.POST.get('reset') == 'true'):
+                    timer.seconds = 15
+                    timer.results = True
+                    timer.save()
+
+                result_user = QueueMusic.objects.filter(room=room).first().queue.user.first_name
+                return JsonResponse({'timing': False, 'result_user': result_user})
+            
+        else:
+            return JsonResponse({})
+    else:
+        return redirect('rooms:rooms_joining', slug=slug)
+
+@csrf_exempt
+@login_required(login_url='start:home')
+def set_results_false(request, slug):
+    if request.method == 'POST':
+        room = Room.objects.filter(slug=slug).first()
+        if room:
+            timer = VoteTimer.objects.filter(room=room).first()
+            timer.results = False
+            timer.save()
+        return JsonResponse({})
+    else:
+        return JsonResponse({})
 
 @csrf_exempt
 @login_required(login_url='start:home')

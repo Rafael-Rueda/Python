@@ -197,7 +197,8 @@ def rooms_create(request):
             
             return redirect('rooms:rooms_joining', slug=newroom.slug)
         return redirect('rooms:rooms')
-
+    
+@csrf_exempt
 @login_required(login_url='start:home')
 def rooms_leave(request):
     userinroom = UserInRoom.objects.filter(user=request.user).first()

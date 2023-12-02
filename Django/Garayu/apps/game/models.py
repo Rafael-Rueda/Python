@@ -17,3 +17,9 @@ class QueueMusic(models.Model):
     queue = models.ForeignKey(to=PlaylistControl, on_delete=models.CASCADE, null=True)
     room = models.ForeignKey(to=Room, on_delete=models.CASCADE)
     ended = models.BooleanField(default=False)
+    voting = models.BooleanField(default=False)
+
+class VoteTimer(models.Model):
+    room = models.ForeignKey(to=Room, on_delete=models.CASCADE)
+    seconds = models.IntegerField(default=15)
+    results = models.BooleanField(default=False)

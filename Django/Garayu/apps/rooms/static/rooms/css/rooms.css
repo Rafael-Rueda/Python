@@ -57,6 +57,7 @@
 .rooms p {
     font-size: 24px;
     font-family: sans-serif;
+    align-self: center;
 }
 
 .room {
@@ -355,6 +356,13 @@
     align-content: center;
 
     z-index: 10;
+}
+
+.outconfig {
+    width: 50% !important;
+    margin: 32px;
+    margin-left: 64px;
+    transform: translate(48px, -8px)
 }
 
 .configs {

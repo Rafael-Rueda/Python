@@ -11,4 +11,6 @@ urlpatterns = [
     path('game/sort/music/<slug:slug>', views.game_sort_music, name='game_sort_music'),
     path('game/ended/music/<slug:slug>', views.game_ended_music, name='game_ended_music'),
     path('game/end/music/<slug:slug>', views.game_end_music, name='game_end_music'),
+    path('game/vote/<slug:slug>', views.vote_timer, name='vote_timer'),
+    path('game/vote/resultsfalse/<slug:slug>', views.set_results_false, name='set_results_false'),
 ]

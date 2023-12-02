@@ -8,6 +8,7 @@
     transform: translateX(-50%);
     font-weight: bold;
     padding: 4px 32px;
+    width: 100%;
 }
 .message-info, .message-debug {
     background-color: var(--color-info-light);

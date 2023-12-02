@@ -136,42 +136,42 @@
 
 .circle:nth-child(7) {
     transform: rotate(0deg);
-    transform-origin: 30% 20%;
+    transform-origin: 30% 70%;
     animation: rotate_circle 8s alternate infinite ease-in-out, body-animation infinite alternate ease-in-out 5s forwards;
     background-clip: content-box; 
 }
 
 .circle:nth-child(8) {
     transform: rotate(0deg);
-    transform-origin: 40% 25%;
+    transform-origin: 10% 55%;
     animation: rotate_circle 8s alternate infinite ease-in-out, body-animation infinite alternate ease-in-out 5s forwards;
     background-clip: content-box; 
 }
 
 .circle:nth-child(9) {
     transform: rotate(0deg);
-    transform-origin: 20% 60%;
+    transform-origin: 10% 70%;
     animation: rotate_circle 8s alternate infinite ease-in-out, body-animation infinite alternate ease-in-out 5s forwards;
     background-clip: content-box; 
 }
 
 .circle:nth-child(10) {
     transform: rotate(0deg);
-    transform-origin: 10% 20%;
+    transform-origin: 75% 75%;
     animation: rotate_circle 8s alternate infinite ease-in-out, body-animation infinite alternate ease-in-out 5s forwards;
     background-clip: content-box; 
 }
 
 .circle:nth-child(11) {
     transform: rotate(0deg);
-    transform-origin: 20% 30%;
+    transform-origin: 20% 60%;
     animation: rotate_circle 8s alternate infinite ease-in-out, body-animation infinite alternate ease-in-out 5s forwards;
     background-clip: content-box; 
 }
 
 .circle:nth-child(12) {
     transform: rotate(0deg);
-    transform-origin: 35% 45%;
+    transform-origin: 65% 15%;
     animation: rotate_circle 8s alternate infinite ease-in-out, body-animation infinite alternate ease-in-out 5s forwards;
     background-clip: content-box; 
 }
@@ -179,4 +179,69 @@
 @keyframes rotate_circle {
     0% {transform: rotate(0deg);}
     100% {transform: rotate(360deg);}
+}
+
+/* Vote List */
+
+.vote-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(auto-fill, minmax(50px, 50px));
+    gap: 16px;
+
+    height: 80%;
+    width: 100%;
+    overflow-y: scroll;
+        
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    z-index: -1;
+
+}
+.vote-list h2 {
+    font-size: 32px;
+    font-family: sans-serif;
+    margin: 32px;
+    text-align: center;
+    width: auto;
+    display: inline-block;
+}
+
+.vote-list button {
+    width: 50%;
+    height: 40px;
+    background-color: var(--color-info-dark);
+    border-radius: 8px;
+    padding: 16px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    font-family: sans-serif;
+    text-decoration: none;
+
+    display: grid;
+    justify-content: center;
+    align-content: center;
+
+    justify-self: center;
+
+    margin-top: 32px;
+
+    z-index: 10;
+}
+
+.vote-list progress {
+    justify-self: center;
+    width: 50%;
+    height: 16px;
+    margin-top: 32px;
+}
+
+.vote-list progress[value]::-webkit-progress-value {
+    background-image: green;
+    background-size: 35px 20px, 100% 100%, 100% 100%;
 }
