@@ -2,6 +2,7 @@ import random
 import string
 import time
 
+import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -17,7 +18,7 @@ from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 
 from apps.rooms.forms import CreateRoomForm, JoinPasswordRoomForm
-from apps.rooms.models import Room, UserInRoom
+from apps.rooms.models import Room, TokenForUser, UserInRoom
 from apps.start.forms import NicknameForm
 
 
@@ -35,16 +36,16 @@ def rooms_checkin(request):
             User.objects.create_user(username=username, password=password, first_name=form.cleaned_data['nickname'])
 
             # Login user
-            user = authenticate(
+            user_auth = authenticate(
                 request,
                 username=username,
                 password=password
             )
 
-            if user is not None:
-                login(request, user)
+            if user_auth is not None:
+                login(request, user_auth)
             else:
-                messages.error(request, 'Algo deu errado ! Por favor tente novamente.')
+                messages.error(request, 'Something got wrong ! Please, try again.')
                 redirect('/')
 
             # Del session nicknamedata
@@ -62,38 +63,37 @@ def rooms_checkin(request):
     else: 
         return redirect('start:home')
 
-def delete_user(request):
-    print('delete_user called')
-    if request.method == 'POST':
-        ...
-
-
 @login_required(login_url='start:home')
 def rooms(request):
+    if 'access_token' in request.GET:
+        access_token = request.GET['access_token']
+        
+        if not TokenForUser.objects.filter(user=request.user).exists():
+            TokenForUser.objects.create(user=request.user, token=access_token)
+        
 
-    if 'code' in request.GET:
-        code = request.GET['code']
+    # if 'code' in request.GET:
+    #     sp_oauth_token = SpotifyOAuth(
+    #         settings.SPOTIFY_CLIENT_ID,
+    #         settings.SPOTIFY_CLIENT_SECRET,
+    #         settings.SPOTIFY_REDIRECT_URI,
+    #         scope="user-library-read user-top-read user-read-playback-state user-read-recently-played",
+    #     )
 
-        sp_oauth = SpotifyOAuth(
-            settings.SPOTIFY_CLIENT_ID,
-            settings.SPOTIFY_CLIENT_SECRET,
-            settings.SPOTIFY_REDIRECT_URI,
-            scope="user-library-read user-top-read user-read-playback-state user-read-recently-played",
-        )
+    #     code = request.GET['code']
 
-        token_info = sp_oauth.get_access_token(code)
+    #     token_info = sp_oauth_token.get_access_token(code=code)
+    #     print('access token = ', token_info['access_token'])
 
-        request.session['token_info'] = token_info
+    #     request.session['token_info'] = token_info
 
-        if token_info.get('expires_at', 0) < time.time():
-            sp_oauth = SpotifyOAuth(
-                settings.SPOTIFY_CLIENT_ID,
-                settings.SPOTIFY_CLIENT_SECRET,
-                settings.SPOTIFY_REDIRECT_URI,
-                scope="user-library-read user-top-read user-read-playback-state user-read-recently-played",
-            )
-            token_info = sp_oauth.refresh_access_token(token_info['refresh_token'])
-            request.session['token_info'] = token_info
+    #     if token_info.get('expires_at', 0) < time.time():
+    #         token_info = sp_oauth_token.refresh_access_token(token_info['refresh_token'])
+    #         request.session['token_info'] = token_info
+
+    #     sp = Spotify(auth=token_info['access_token'])
+
+    #     playlists = sp.current_user()
 
     rooms = Room.objects.all().filter(available=True)
     createroomform = CreateRoomForm()
